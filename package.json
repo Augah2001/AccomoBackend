@@ -1,0 +1,26 @@
+{
+  "name": "accomobackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "target": "ES2016",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec ts-node-dev -- ./**/*.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "express": "^4.18.2",
+    "joi": "^17.11.0",
+    "mongoose": "^8.0.1",
+    "nodemon": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "ts-node-dev": "^2.0.0"
+  }
+}
