@@ -1,8 +1,9 @@
 import Joi, { any, string } from "joi";
 import mongoose from "mongoose";
 import { locationSchema } from "./locations";
+import { User, UserType, userSchema } from "./users";
 
-export interface House {
+export interface HouseInterface {
   houseNumber: number;
   description: string;
   curfew: boolean;
@@ -12,10 +13,11 @@ export interface House {
   backgroundImage: string;
   images: any[];
   location: Location;
+  owner: UserType
 }
 
-const houseSchema = new mongoose.Schema<House>({
-  houseNumber: { type: Number, required: true, unique: true },
+const houseSchema = new mongoose.Schema<HouseInterface>({
+  houseNumber: { type: Number, required: true },
   description: { type: String, maxLength: 255 },
   curfew: Boolean,
   price: { type: Number, required: true },
@@ -24,11 +26,12 @@ const houseSchema = new mongoose.Schema<House>({
   backgroundImage: String,
   images: [],
   location: { type: locationSchema, required: true },
+  owner: userSchema
 });
 
 const House = mongoose.model("House", houseSchema)
 
-const validateHouse = (house: House) => {
+const validateHouse = (house: HouseInterface) => {
   const schema = Joi.object({
     houseNumber: Joi.number().required(),
     description: Joi.string().max(255),
@@ -38,7 +41,8 @@ const validateHouse = (house: House) => {
   services: Joi.array().items(Joi.string()),
   backgroundImage: Joi.string(),
   images: Joi.array().items(Joi.string()),
-  locationId: Joi.string().required()
+  locationId: Joi.string().required(),
+  ownerId: Joi.string().required()
 
   });
 

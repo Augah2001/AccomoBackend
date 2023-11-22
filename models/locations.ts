@@ -2,14 +2,13 @@ import Joi from "joi";
 import mongoose from "mongoose";
 
 
- export interface Location {
-    name: string,
-    id: number,
+
+
+interface Location {
+    name: string;
+    id:number;
     distance: string
-
 }
-
-
 
 
 const locationSchema = new mongoose.Schema<Location>({
