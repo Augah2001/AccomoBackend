@@ -4,23 +4,23 @@ import mongoose from "mongoose";
 
 
 
-interface Location {
+export interface LocationInterface {
     name: string;
     id:number;
     distance: string
 }
 
 
-const locationSchema = new mongoose.Schema<Location>({
+const locationSchema = new mongoose.Schema<LocationInterface>({
     name: {type: String, required: true, minLength: 2 , maxLength: 255},
-    id: {type: Number, required: true, unique: true},
+    id: {type: Number, required: true},
     distance: {type: String || null}
 })
 
 const Location = mongoose.model("Location", locationSchema)
 
 
-const validateLocation = (location: Location ) => {
+const validateLocation = (location: LocationInterface ) => {
 
 
     const schema = Joi.object({

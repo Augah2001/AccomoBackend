@@ -7,12 +7,16 @@ import { ValidationResult } from "joi";
 class ApiSever<T> {
   Router: Router;
   Model: Model<T>;
-  validationFn: (data: T) => ValidationResult<any>
+  validationFn: (data: T, options?: any) => ValidationResult<any>;
 
-  constructor(Router: Router, Model: Model<T>, validationFn: (data: T) => ValidationResult<any>) {
+  constructor(
+    Router: Router,
+    Model: Model<T>,
+    validationFn: (data: T) => ValidationResult<any>
+  ) {
     this.Router = Router;
     this.Model = Model;
-    this.validationFn  = validationFn
+    this.validationFn = validationFn;
   }
 
   Post = () => {
@@ -41,7 +45,7 @@ class ApiSever<T> {
           req.params.id,
           req.body
         );
-        if (!document) return res.status(404).send(`${document} not found`);
+        if (!document) return res.status(404).send(`not found`);
         res.send(document);
       })
     );
@@ -52,8 +56,8 @@ class ApiSever<T> {
       "/",
       asyncMiddleware(async (req, res) => {
         const document = await this.Model.find();
-        if (!document || document.length === 0)
-          return res.status(404).send(`${document} not found`);
+        if (!document)
+          return res.status(404).send(`not found`);
         res.send(document);
       })
     );
@@ -64,8 +68,7 @@ class ApiSever<T> {
       "/:id",
       asyncMiddleware(async (req, res) => {
         const document = await this.Model.findById(req.params.id);
-        if (!document)
-          return res.status(404).send(`${document} not found`);
+        if (!document) return res.status(404).send(`not found`);
         res.send(document);
       })
     );
@@ -75,8 +78,8 @@ class ApiSever<T> {
     this.Router.delete(
       "/:id",
       asyncMiddleware(async (req, res) => {
-        const document = await this.Model.findByIdAndRemove(req.params.id);
-        if (!document) return res.status(404).send(`${document} not fount`);
+        const document = await this.Model.findByIdAndDelete(req.params.id);
+        if (!document) return res.status(404).send(`not fount`);
         res.send(document);
       })
     );

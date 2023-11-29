@@ -22,13 +22,14 @@ const userSchema =
 
   const User = mongoose.model("User",userSchema)
 
-const validateUser = (user: UserType) => {
+const validateUser = (user: UserType, userType?: string) => {
   const schema = Joi.object({
     firstName: Joi.string().required().max(255),
     lastName: Joi.string().required().max(255),
     email: Joi.string().required().max(255),
     password: Joi.string().required().max(255),
     userType: Joi.string().valid("tenant", "landlord").required(),
+    authorization_key: userType === "landlord"? Joi.string().required() : Joi.string().allow("")
   });
 
   return schema.validate(user);

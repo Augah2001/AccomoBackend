@@ -1,6 +1,6 @@
 import Joi, { any, string } from "joi";
 import mongoose from "mongoose";
-import { locationSchema } from "./locations";
+import { LocationInterface, locationSchema } from "./locations";
 import { User, UserType, userSchema } from "./users";
 
 export interface HouseInterface {
@@ -9,11 +9,13 @@ export interface HouseInterface {
   curfew: boolean;
   price: number;
   distance: string;
-  services: ["jacuzzi", "gas", "wifi"];
+  services: any[];
   backgroundImage: string;
   images: any[];
-  location: Location;
-  owner: UserType
+  location: any;
+  owner: UserType;
+  capacity: number;
+  occupied: number;
 }
 
 const houseSchema = new mongoose.Schema<HouseInterface>({
@@ -25,28 +27,33 @@ const houseSchema = new mongoose.Schema<HouseInterface>({
   services: [String],
   backgroundImage: String,
   images: [],
-  location: { type: locationSchema, required: true },
-  owner: userSchema
+  location: { type: locationSchema },
+  owner: userSchema,
+  capacity: Number,
+  occupied: Number,
 });
 
-const House = mongoose.model("House", houseSchema)
+const House = mongoose.model("House", houseSchema);
 
 const validateHouse = (house: HouseInterface) => {
   const schema = Joi.object({
     houseNumber: Joi.number().required(),
     description: Joi.string().max(255),
-    curfew: Joi.boolean(),
+    curfew: Joi.string(),
     price: Joi.number().required(),
     distance: Joi.string().required(),
-  services: Joi.array().items(Joi.string()),
-  backgroundImage: Joi.string(),
-  images: Joi.array().items(Joi.string()),
-  locationId: Joi.string().required(),
-  ownerId: Joi.string().required()
-
+    services: Joi.array().items(Joi.string()),
+    backgroundImage: Joi.string().allow(""),
+    images: Joi.array().items(Joi.string()),
+    location: Joi.string().allow(""),
+    ownerId: Joi.string().required(),
+    capacity: Joi.number().integer().required(),
+    occupied: Joi.number()
+      .integer()
+      .required(),
   });
 
-  return schema.validate(house)
+  return schema.validate(house);
 };
 
-export {validateHouse ,houseSchema, House}
+export { validateHouse, houseSchema, House };
