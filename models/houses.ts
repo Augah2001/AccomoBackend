@@ -1,7 +1,7 @@
-import Joi, { any, string } from "joi";
+import Joi from "joi";
 import mongoose from "mongoose";
-import { LocationInterface, locationSchema } from "./locations";
-import { User, UserType, userSchema } from "./users";
+import {  locationSchema } from "./locations";
+import {  UserType, userSchema } from "./users";
 
 export interface HouseInterface {
   houseNumber: number;

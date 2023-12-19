@@ -4,7 +4,7 @@ import { User, UserType, validateUser } from "../models/users";
 import { asyncMiddleware } from "../middleware/asyncMiddleware";
 import _ from "lodash";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 const Router = express.Router();
 
 class UserExtendedApi extends ApiSever<UserType> {
@@ -16,6 +16,7 @@ class UserExtendedApi extends ApiSever<UserType> {
     this.Router.post(
       "/",
       asyncMiddleware(async (req, res) => {
+        console.log(req.body);
         const { error } = validateUser(req.body, req.body.userType);
         if (error) return res.status(400).json({ message: error.message });
         let user = await User.findOne({ email: req.body.email });
@@ -28,16 +29,19 @@ class UserExtendedApi extends ApiSever<UserType> {
           "password",
           "userType",
           "authKey",
-        ])
+        ]);
 
-        user = new User(req.body)
-        
+        user = new User(req.body);
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(user.password, salt);
         user.password = hashedPassword;
         user = await user.save();
-        const token = jwt.sign({_id: user._id, firstName: user.firstName, userType: user.userType}, "authKey")
-        
+        const token = jwt.sign(
+          { _id: user._id, firstName: user.firstName, userType: user.userType },
+          "authKey"
+        );
+
         res.header("x-auth-token", token).send(user);
       })
     );
